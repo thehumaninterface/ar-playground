@@ -49,7 +49,11 @@
 
     renderer = new THREE.WebGLRenderer({
       antialias : true,
-      alpha: true
+      alpha: true,
+      
+      // In order to capture the image being drawn on the canvas
+      // https://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
+      preserveDrawingBuffer: true
     });
     renderer.setClearColor(new THREE.Color('lightgrey'), 0)
     renderer.setSize( 640, 480 );
@@ -165,9 +169,21 @@
   }
 
   function ScreenCapture() {
-    var canvas = arToolkitContext.arController.canvas;
-    var preview = document.getElementById('screencapturepreview');
-    preview.src=canvas.toDataURL("image/png");
+    var sourceCanvas = arToolkitContext.arController.ctx.canvas;
+    var drawingCanvas = renderer.domElement;
+    
+    console.log(drawingCanvas);
+    console.log(arToolkitSource);
+    console.log(arToolkitContext);
+    console.log(renderer);
+    
+    
+    mergeImages([sourceCanvas.toDataURL("image/png"), drawingCanvas.toDataURL("image/png")])
+      .then(b64 => document.getElementById('screencapturepreview').src = b64);
+
+    // var preview = document.getElementById('screencapturepreview');
+    // preview.src=mergedCanvas.toDataURL("image/png");
+    
 
     // Save image to device
     // var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
@@ -177,6 +193,7 @@
 
 </script>
 
+<script src="/assets/js/merge-images.js" defer></script>
 
   <style>
     /* .ui {
