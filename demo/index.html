@@ -163,7 +163,46 @@
     update();
     render();
   }
+
+  function ScreenCapture() {
+    var canvas = arToolkitContext.arController.canvas;
+    var preview = document.getElementById('screencapturepreview');
+    preview.src=canvas.toDataURL("image/png");
+
+    // Save image to device
+    // var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");  // here is the most important part because if you dont replace you will get a DOM 18 exception.
+    // window.location.href=image; // it will save locally
+  }
+
+
 </script>
+
+
+  <style>
+    /* .ui {
+      position: fixed;
+      z-index: 1000;
+    } */
+    .panel {
+      position: fixed;
+      z-index: 1000;
+    }
+    .panel-controls {
+      left: 50%;
+      bottom: 0;
+      width: 200px;
+      margin-left: -100px;
+    }
+
+  </style>
+
+  <div class="ui">
+    <div class="panel panel-controls">
+      <button type="button" onclick="ScreenCapture()">ScreenCapture</button> <br>
+      <img id="screencapturepreview" src="" width="200px" height="200px" alt="Screen capture preview">
+    </div>
+
+  </div>
 
 </body>
 </html>
