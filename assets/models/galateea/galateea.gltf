@@ -1,0 +1,148 @@
+{
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5125,
+            "count" : 217344,
+            "max" : [
+                144895
+            ],
+            "min" : [
+                0
+            ],
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 144896,
+            "max" : [
+                2.399521827697754,
+                2.118884801864624,
+                1.5021984577178955
+            ],
+            "min" : [
+                -1.2137173414230347,
+                -2.118884801864624,
+                -1.3244130611419678
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 144896,
+            "max" : [
+                0.9998973608016968,
+                0.9998634457588196,
+                0.99970942735672
+            ],
+            "min" : [
+                -0.9989620447158813,
+                -0.9998635053634644,
+                -0.9998595118522644
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5126,
+            "count" : 144896,
+            "max" : [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min" : [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type" : "VEC4"
+        }
+    ],
+    "asset" : {
+        "generator" : "Khronos Blender glTF 2.0 exporter",
+        "version" : "2.0"
+    },
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 869376,
+            "byteOffset" : 0,
+            "target" : 34963
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1738752,
+            "byteOffset" : 869376,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1738752,
+            "byteOffset" : 2608128,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 2318336,
+            "byteOffset" : 4346880,
+            "target" : 34962
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 6665216,
+            "uri" : "galateea.bin"
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Sphere.000",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "COLOR_0" : 3,
+                        "NORMAL" : 2,
+                        "POSITION" : 1
+                    },
+                    "indices" : 0
+                }
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "head",
+            "rotation" : [
+                -0.007189216557890177,
+                -0.007189554627984762,
+                -0.7070702314376831,
+                0.7070702314376831
+            ],
+            "scale" : [
+                -1.84883713722229,
+                -1.910294532775879,
+                -1.910270094871521
+            ],
+            "translation" : [
+                5.9604644775390625e-05,
+                3.0669455528259277,
+                -0.3873176574707031
+            ]
+        }
+    ],
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                0
+            ]
+        }
+    ]
+}

@@ -6,6 +6,8 @@
   <title>Hello, world!</title>
   <!-- include three.js library -->
   <script src="/assets/js/three.js"></script>
+  <script src="/assets/js/GLTFLoader.js"></script>
+  <script src="/assets/js/OBJLoader.js"></script>
   <!-- include jsartookit -->
   <script src="/assets/js/artoolkit.min.js"></script>
   <script src="/assets/js/artoolkit.api.js"></script>
@@ -25,6 +27,16 @@
 
 
 <script>
+
+
+
+  // Well this is kinda stupid
+  function degreesToRadians(degrees) {
+    return degrees * Math.PI / 180;    
+  }
+  Math.radians = degreesToRadians;
+
+  // Actual code
 
   var scene, camera, renderer, clock, deltaTime, totalTime;
 
@@ -115,36 +127,54 @@
     // build markerControls
     markerRoot1 = new THREE.Group();
     scene.add(markerRoot1);
+
     let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot1, {
       type: 'pattern', patternUrl: "data/hiro.patt",
     })
 
-    let geometry1 = new THREE.SphereGeometry(1, 32,32);
-    
-    let loader = new THREE.TextureLoader();
-    let texture = loader.load( 'images/earth-sphere.jpg', render );
-    let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.5 } );
-    
-    mesh1 = new THREE.Mesh( geometry1, material1 );
-    mesh1.position.y = 1;
-    
-    markerRoot1.add( mesh1 );
-    
-    let pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
-    pointLight.position.set(0.5,3,2);
-    // create a mesh to help visualize the position of the light
-    pointLight.add( 
-      new THREE.Mesh( 
-        new THREE.SphereBufferGeometry( 0.05, 16,8 ), 
-        new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.5 }) 
-      ) 
+    // Load a glTF resource
+    var loader = new THREE.GLTFLoader();
+
+    loader.load(
+      // resource URL
+      '/assets/models/galateea/galateea.gltf',
+      // called when the resource is loaded
+      function ( gltf ) {
+
+        mesh1 = gltf.scene.children[0];
+        mesh1.scale.set(-0.4,-0.4,-0.4);
+        mesh1.position.set(0,0.2,0);
+        mesh1.rotation.set(0, 0, -Math.radians(90));
+
+        mesh1.material = new THREE.MeshNormalMaterial({
+          // transparent: true,
+          // opacity: ,
+          side: THREE.DoubleSide
+        });
+
+        markerRoot1.add(mesh1);
+      },
+      // called while loading is progressing
+      function ( xhr ) {
+
+        console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+
+      },
+      // called when loading has errors
+      function ( error ) {
+
+        console.log( 'An error happened while loading model', error );
+
+      }
     );
-    markerRoot1.add( pointLight );
   }
 
 
   function update()
   {
+    // console.log("markerRoot1", markerRoot1);
+    // console.log("mesh1", mesh1);
+    // debugger;
     if ( markerRoot1.visible )
       mesh1.rotation.y += 0.01;
     // update artoolkit on every frame
@@ -153,8 +183,7 @@
   }
 
 
-  function render()
-  {
+  function render() {
     renderer.render( scene, camera );
   }
 

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - glTF loader</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #000;
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			#info {
+				color: #fff;
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+			}
+			#info a {
+				color: #75ddc1;
+				font-weight: bold;
+			}
+		</style>
+	</head>
+
+	<body>
+		<script src="/assets/js/three.js"></script>
+    <script src="/assets/js/GLTFLoader.js"></script>
+
+		<script src="/assets/js/OrbitControls.js"></script>
+
+		<!-- <script src="js/pmrem/PMREMGenerator.js"></script>
+		<script src="js/pmrem/PMREMCubeUVPacker.js"></script> -->
+
+		<script src="/assets/js/WebGL.js"></script>
+
+		<script>
+
+			if ( WEBGL.isWebGLAvailable() === false ) {
+
+				document.body.appendChild( WEBGL.getWebGLErrorMessage() );
+
+			}
+
+			var container, controls;
+			var camera, scene, renderer;
+
+			init();
+			animate();
+
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 0.25, 2000 );
+        camera.position.set(0, 7, 18 );
+        camera.rotation.set(0, 0, 0);
+
+				controls = new THREE.OrbitControls( camera );
+				controls.target.set( 0, 0, 0 );
+				controls.update();
+
+				scene = new THREE.Scene();
+
+				// var urls = [ 'posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg' ];
+				// var loader = new THREE.CubeTextureLoader().setPath( '/assets/textures/cube/Bridge2/' );
+				// loader.load( urls, function ( texture ) {
+
+				// 	var pmremGenerator = new THREE.PMREMGenerator( texture );
+				// 	pmremGenerator.update( renderer );
+
+				// 	var pmremCubeUVPacker = new THREE.PMREMCubeUVPacker( pmremGenerator.cubeLods );
+				// 	pmremCubeUVPacker.update( renderer );
+
+				// 	var envMap = pmremCubeUVPacker.CubeUVRenderTarget.texture;
+
+					// model
+
+					var loader = new THREE.GLTFLoader();
+					loader.load( '/assets/models/galateea/galateea.gltf', function ( gltf ) {
+
+            var group = new THREE.Group();
+            scene.add(group);
+
+            var mesh = gltf.scene.children[0];
+            mesh.material = new THREE.MeshNormalMaterial({
+              // transparent: true,
+              // opacity: ,
+              side: THREE.DoubleSide
+            });
+
+            group.add(mesh);
+
+          } );
+          
+          // 	pmremGenerator.dispose();
+          // 	pmremCubeUVPacker.dispose();
+          
+          // 	scene.background = texture;
+          
+          // } );
+          
+        var light = new THREE.PointLight( 0xffffff, 1, 100 );
+        light.position.set( 20, 20, 20 );
+        scene.add( light );
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.gammaOutput = true;
+				container.appendChild( renderer.domElement );
+
+				window.addEventListener( 'resize', onWindowResize, false );
+
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			//
+
+			function animate() {
+
+        requestAnimationFrame( animate );
+        
+				renderer.render( scene, camera );
+
+				// stats.update();
+
+			}
+
+		</script>
+
+	</body>
+</html>
