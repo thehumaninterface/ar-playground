@@ -46,6 +46,9 @@
 
   var mesh1;
 
+  var mixer;
+  var action;
+
   initialize();
   animate();
 
@@ -137,21 +140,33 @@
 
     loader.load(
       // resource URL
-      '/assets/models/galateea/galateea.gltf',
+      '/assets/models/pixelHeart/pixelHeart.gltf',
       // called when the resource is loaded
       function ( gltf ) {
 
-        mesh1 = gltf.scene.children[0];
-        mesh1.scale.set(-0.4,-0.4,-0.4);
-        mesh1.position.set(0,0.2,0);
-        mesh1.rotation.set(0, 0, -Math.radians(90));
+        console.log("GLTF model loaded");
+        console.log(gltf);
 
-        mesh1.material = new THREE.MeshNormalMaterial({
-          // transparent: true,
-          // opacity: ,
-          side: THREE.DoubleSide
-        });
+        mesh1 = gltf.scene.children.filter(child => child.isMesh)[0];
 
+
+        
+        // mesh1.material = new THREE.MeshNormalMaterial({
+        //   // transparent: true,
+        //   // opacity: 0.9,
+        //   side: THREE.DoubleSide
+        // });
+
+        var light = new THREE.PointLight( 0xffffff, 1, 100 );
+        light.position.set( 9, 9, 9 );
+        scene.add( light );
+
+        var animation = gltf.animations[0];
+        mixer = new THREE.AnimationMixer(mesh1);
+        action = mixer.clipAction(animation);
+        action.play();
+        
+        
         markerRoot1.add(mesh1);
       },
       // called while loading is progressing
@@ -170,14 +185,20 @@
   }
 
 
-  function update()
-  {
+  function update() {
     // console.log("markerRoot1", markerRoot1);
     // console.log("mesh1", mesh1);
     // debugger;
-    if ( markerRoot1.visible )
-      mesh1.rotation.y += 0.01;
+    // if ( markerRoot1.visible )
+      // mesh1.rotation.y += 0.01;
     // update artoolkit on every frame
+    // console.log(action);
+
+    if (action.getMixer()) {
+      mixer = action.getMixer();
+      mixer.update(deltaTime);
+    }
+
     if ( arToolkitSource.ready !== false )
       arToolkitContext.update( arToolkitSource.domElement );
   }

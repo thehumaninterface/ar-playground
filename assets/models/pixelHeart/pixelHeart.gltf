@@ -1,0 +1,201 @@
+{
+    "accessors" : [
+        {
+            "bufferView" : 0,
+            "componentType" : 5123,
+            "count" : 324,
+            "max" : [
+                139
+            ],
+            "min" : [
+                0
+            ],
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 1,
+            "componentType" : 5126,
+            "count" : 140,
+            "max" : [
+                1.0005253553390503,
+                0.20010507106781006,
+                1.0005253553390503
+            ],
+            "min" : [
+                -1.0005253553390503,
+                -0.20010507106781006,
+                -1.0005253553390503
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 2,
+            "componentType" : 5126,
+            "count" : 140,
+            "max" : [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min" : [
+                -1.0,
+                -1.0,
+                -1.0
+            ],
+            "type" : "VEC3"
+        },
+        {
+            "bufferView" : 3,
+            "componentType" : 5126,
+            "count" : 30,
+            "max" : [
+                1.2083333333333333
+            ],
+            "min" : [
+                0.0
+            ],
+            "type" : "SCALAR"
+        },
+        {
+            "bufferView" : 4,
+            "componentType" : 5126,
+            "count" : 30,
+            "max" : [
+                1.25,
+                1.25,
+                1.25
+            ],
+            "min" : [
+                0.8918244242668152,
+                0.8918244242668152,
+                0.8918244242668152
+            ],
+            "type" : "VEC3"
+        }
+    ],
+    "animations" : [
+        {
+            "channels" : [
+                {
+                    "sampler" : 0,
+                    "target" : {
+                        "node" : 0,
+                        "path" : "scale"
+                    }
+                }
+            ],
+            "name" : "HeartAction",
+            "samplers" : [
+                {
+                    "input" : 3,
+                    "interpolation" : "LINEAR",
+                    "output" : 4
+                }
+            ]
+        }
+    ],
+    "asset" : {
+        "generator" : "Khronos Blender glTF 2.0 exporter",
+        "version" : "2.0"
+    },
+    "bufferViews" : [
+        {
+            "buffer" : 0,
+            "byteLength" : 648,
+            "byteOffset" : 0,
+            "target" : 34963
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1680,
+            "byteOffset" : 648,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 1680,
+            "byteOffset" : 2328,
+            "target" : 34962
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 120,
+            "byteOffset" : 4008
+        },
+        {
+            "buffer" : 0,
+            "byteLength" : 360,
+            "byteOffset" : 4128
+        }
+    ],
+    "buffers" : [
+        {
+            "byteLength" : 4488,
+            "uri" : "pixelHeart.bin"
+        }
+    ],
+    "materials" : [
+        {
+            "alphaMode" : "BLEND",
+            "emissiveFactor" : [
+                0.6880000252723661,
+                0.007894072377612749,
+                0.05994479280862386
+            ],
+            "name" : "Material",
+            "pbrMetallicRoughness" : {
+                "baseColorFactor" : [
+                    0.33568630835589275,
+                    0.0038516452281902036,
+                    0.02924803119755648,
+                    0.9019608497619629
+                ],
+                "metallicFactor" : 0.0
+            }
+        }
+    ],
+    "meshes" : [
+        {
+            "name" : "Cube.003",
+            "primitives" : [
+                {
+                    "attributes" : {
+                        "NORMAL" : 2,
+                        "POSITION" : 1
+                    },
+                    "indices" : 0,
+                    "material" : 0
+                }
+            ]
+        }
+    ],
+    "nodes" : [
+        {
+            "mesh" : 0,
+            "name" : "Heart",
+            "translation" : [
+                0.0,
+                1.2002713680267334,
+                -0.0
+            ]
+        },
+        {
+            "name" : "Point",
+            "translation" : [
+                1.0907427072525024,
+                2.9698030948638916,
+                -2.1378555297851562
+            ]
+        }
+    ],
+    "scene" : 0,
+    "scenes" : [
+        {
+            "name" : "Scene",
+            "nodes" : [
+                1,
+                0
+            ]
+        }
+    ]
+}
