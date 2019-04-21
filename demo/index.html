@@ -114,8 +114,10 @@
 
     // create atToolkitContext
     arToolkitContext = new THREEx.ArToolkitContext({
+      debug: true,
+      detectionMode: 'mono_and_matrix',
+      matrixCodeType: '3x3',
       cameraParametersUrl: 'data/camera_para.dat',
-      detectionMode: 'mono'
     });
     
     // copy projection matrix to camera when initialization complete
@@ -132,7 +134,9 @@
     scene.add(markerRoot1);
 
     let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot1, {
-      type: 'pattern', patternUrl: "/assets/markers/hiro.patt",
+      type: 'barcode', 
+      barcodeValue: 37
+      // patternUrl: "/assets/markers/hiro.patt",
     })
 
     // Load a glTF resource
