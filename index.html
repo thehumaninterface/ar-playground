@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
   <title>AR Interfața Umană</title>
   <meta name="description" content="AR dizolvă limita dintre real și virtual—visul oricărui designer de interfețe. Aici sunt experimentele noastre.">
@@ -18,12 +18,12 @@
   
   <!-- Favicon -->
   <!-- use https://realfavicongenerator.net/ -->
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-  <link rel="manifest" href="/favicon/manifest.json">
-  <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#ffbb1b">
-  <meta name="theme-color" content="#302845">
+  <!-- <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png"> -->
+  <!-- <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png"> -->
+  <!-- <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png"> -->
+  <!-- <link rel="manifest" href="/favicon/manifest.json"> -->
+  <!-- <link rel="mask-icon" href="/favicon/safari-pinned-tab.svg" color="#ffbb1b"> -->
+  <!-- <meta name="theme-color" content="#302845"> -->
 
   <!-- CSS -->
   <link rel="stylesheet" href="/assets/css/main.css">
@@ -85,6 +85,7 @@ Valentin
       }();
       
       if (params.debug) {
+        console.time('Loaded AR scripts');
         loadAR();
       }
       
@@ -112,18 +113,17 @@ Valentin
           $script("/assets/js/GLTFLoader.js");
           $script([
             "/assets/js/artoolkit.min.js",
-          ], function() {
-            $script([
             "/assets/js/threex-artoolkitsource.js",
             "/assets/js/threex-artoolkitcontext.js",
             "/assets/js/threex-arbasecontrols.js",
             "/assets/js/threex-armarkercontrols.js"
-            ])
+          ], function() {
             console.timeEnd('Loaded AR scripts');
             ARloaded = true;
 
             $script("/assets/js/ar-main.js", function() {
-              console.log('loaded main');
+
+
             });
 
             var splash = document.querySelector('#splash');

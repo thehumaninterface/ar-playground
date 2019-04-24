@@ -1,5 +1,36 @@
 // Actual code
-totalTime = 0;
+
+var actions = [];
+
+
+
+
+
+// Create renderer
+renderer = new THREE.WebGLRenderer({
+  antialias : true,
+  alpha: true,
+  
+  // In order to capture the image being drawn on the canvas
+  // https://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
+  preserveDrawingBuffer: true
+});
+renderer.setClearColor(new THREE.Color('lightgrey'), 0);
+renderer.setSize( 480, 480 );
+renderer.domElement.style.position = 'absolute'
+renderer.domElement.style.top = '0px'
+renderer.domElement.style.left = '0px'
+document.body.appendChild( renderer.domElement );
+
+
+// Material
+defaultMaterial = new THREE.MeshNormalMaterial({
+  transparent: true,
+  opacity: 0.9,
+  side: THREE.DoubleSide
+});
+
+
 
 initialize();
 animate();
@@ -7,30 +38,14 @@ animate();
 function initialize() {
   scene = new THREE.Scene();
 
-  let ambientLight = new THREE.AmbientLight( 0xcccccc, 0.5 );
+  let ambientLight = new THREE.AmbientLight( 0xffffff, 0.5 );
   scene.add( ambientLight );
 
   camera = new THREE.Camera();
   scene.add(camera);
-
-  renderer = new THREE.WebGLRenderer({
-    antialias : true,
-    alpha: true,
-    
-    // In order to capture the image being drawn on the canvas
-    // https://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
-    preserveDrawingBuffer: true
-  });
-  renderer.setClearColor(new THREE.Color('lightgrey'), 0)
-  renderer.setSize( 640, 480 );
-  renderer.domElement.style.position = 'absolute'
-  renderer.domElement.style.top = '0px'
-  renderer.domElement.style.left = '0px'
-  document.body.appendChild( renderer.domElement );
+  
 
   clock = new THREE.Clock();
-  deltaTime = 0;
-  totalTime = 0;
   
   ////////////////////////////////////////////////////////////
   // setup arToolkitSource
@@ -68,36 +83,14 @@ function initialize() {
     matrixCodeType: '3x3',
     cameraParametersUrl: '/assets/data/camera_para.dat',
   });
-
-
-
-  // define listener that runs once
-  var onMarkerFound = function() {
-    var ran = false;
-
-    var resetListener;
-
-    return function(e) {
-      clearTimeout(resetListener);
-      if (!ran) {
-        console.log(e);
-        ran = true;
-      } else {
-      }
-      resetListener = setTimeout(function() {
-        ran = false;
-      }, 100);
-    }
-  }();
   
   // copy projection matrix to camera when initialization complete
   arToolkitContext.init( function onCompleted(){
     camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
     arController = arToolkitContext.arController;
 
-
     // add listener
-    arController.addEventListener('getMarker', onMarkerFound);
+    // arController.addEventListener('getMarker', onMarkerFound);
   });
 
 
@@ -121,43 +114,37 @@ function initialize() {
   console.time('Loaded GLTF model');
   loader.load(
     // resource URL
-    '/assets/models/pixelHeart/pixelHeart.gltf',
+    '/assets/models/testMultipleAnimations/testMultipleAnimations.gltf',
+
     // called when the resource is loaded
     function ( gltf ) {
-      console.log("Loaded GLTF model");
+      console.timeEnd('Loaded GLTF model');
       console.log(gltf);
 
-      mesh1 = gltf.scene.children.filter(child => child.isMesh)[0];
+      // material
+      gltf.scene.children.forEach(child => {
+        if (child.isMesh) child.material = defaultMaterial;
+      });
 
-      // mesh1.material = new THREE.MeshNormalMaterial({
-      //   // transparent: true,
-      //   // opacity: 0.9,
-      //   side: THREE.DoubleSide
-      // });
-
-      var light = new THREE.PointLight( 0xffffff, 1, 100 );
-      light.position.set( 9, 9, 9 );
-      scene.add( light );
-
-      var animation = gltf.animations[0];
-      mixer = new THREE.AnimationMixer(mesh1);
-      action = mixer.clipAction(animation);
-      action.play();
+      // animation
+      var mixer = new THREE.AnimationMixer(gltf.scene);
+      gltf.animations.forEach(function(animation) {
+        actions.push (
+          mixer.clipAction(animation).play()
+        );
+      });
       
-      
-      markerRoot1.add(mesh1);
+      markerRoot1.add(gltf.scene);
     },
+
     // called while loading is progressing
     function ( xhr ) {
-
       console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
-
     },
+
     // called when loading has errors
     function ( error ) {
-
       console.log( 'An error happened while loading model', error );
-
     }
   );
 }
@@ -172,9 +159,8 @@ function update() {
   // update artoolkit on every frame
   // console.log(action);
 
-  if (action) {
-    mixer = action.getMixer();
-    mixer.update(deltaTime);
+  if (actions.length) {
+    actions.forEach(action => action.getMixer().update(clock.getDelta()));
   }
 
   if ( arToolkitSource.ready !== false )
@@ -187,14 +173,38 @@ function render() {
 }
 
 
-function animate()
-{
+function animate() {
   requestAnimationFrame(animate);
-  deltaTime = clock.getDelta();
-  totalTime += deltaTime;
   update();
   render();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function ScreenCapture() {
   var sourceCanvas = arToolkitContext.arController.ctx.canvas;
