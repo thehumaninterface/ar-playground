@@ -119,11 +119,40 @@
       matrixCodeType: '3x3',
       cameraParametersUrl: 'data/camera_para.dat',
     });
+
+    var arController;
+
+
+
+    // define listener that runs once
+    var onMarkerFound = function() {
+      var ran = false;
+
+      var resetListener;
+
+      return function(e) {
+        clearTimeout(resetListener);
+        if (!ran) {
+          console.log(e);
+          ran = true;
+        } else {
+        }
+        resetListener = setTimeout(function() {
+          ran = false;
+        }, 100);
+      }
+    }();
     
     // copy projection matrix to camera when initialization complete
     arToolkitContext.init( function onCompleted(){
       camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+      arController = arToolkitContext.arController;
+
+
+      // add listener
+      arController.addEventListener('getMarker', onMarkerFound);
     });
+
 
     ////////////////////////////////////////////////////////////
     // setup markerRoots
