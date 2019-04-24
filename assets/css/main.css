@@ -1,0 +1,83 @@
+@charset 'UTF-8';
+
+:root {
+  margin: 0;
+
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  background: #000;
+}
+
+body {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+
+.ui {
+  transition: transform .05s;
+}
+.ui:active {
+  transform: scale(0.95);
+}
+
+.text-center {
+  text-align: center;
+}
+
+.muted {
+  color: rgba(0,0,0,.5);
+}
+
+small,
+.small {
+  font-size: 85.714286%; /* 12 */
+}
+
+
+.splash { 
+  background: #fff; 
+}
+.splash a {
+  color: inherit;
+}
+.splash-header {
+  text-align: center;
+}
+
+
+.splash.transition {
+  transition: all .3s ease-in;
+}
+.splash.transition.out {
+  transform: scale(3);
+  opacity: 0;
+}
+
+/* @media (max-width: 900px) { */
+  .splash-header {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+  .splash-header-inner {
+    max-width: 24rem;
+    margin: 0 auto;
+  }
+  .brand-line {
+    margin-top: 4rem;
+    font-weight: 600;
+  }
+/* } */
+
+
+/* fonts */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,600&subset=latin-ext');
