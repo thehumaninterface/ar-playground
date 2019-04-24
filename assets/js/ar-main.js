@@ -41,11 +41,10 @@ function initialize() {
   });
 
   function onResize() {
-    arToolkitSource.onResize()	
-    arToolkitSource.copySizeTo(renderer.domElement)	
-    if ( arToolkitContext.arController !== null )
-    {
-      arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
+    arToolkitSource.onResizeElement()	
+    arToolkitSource.copyElementSizeTo(renderer.domElement)	
+    if ( arToolkitContext.arController !== null ) {
+      arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)	
     }	
   }
 
@@ -119,19 +118,17 @@ function initialize() {
   // Load a glTF resource
   var loader = new THREE.GLTFLoader();
 
+  console.time('Loaded GLTF model');
   loader.load(
     // resource URL
     '/assets/models/pixelHeart/pixelHeart.gltf',
     // called when the resource is loaded
     function ( gltf ) {
-
-      console.log("GLTF model loaded");
+      console.log("Loaded GLTF model");
       console.log(gltf);
 
       mesh1 = gltf.scene.children.filter(child => child.isMesh)[0];
 
-
-      
       // mesh1.material = new THREE.MeshNormalMaterial({
       //   // transparent: true,
       //   // opacity: 0.9,
@@ -175,7 +172,7 @@ function update() {
   // update artoolkit on every frame
   // console.log(action);
 
-  if (action.getMixer()) {
+  if (action) {
     mixer = action.getMixer();
     mixer.update(deltaTime);
   }
