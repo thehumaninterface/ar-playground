@@ -148,7 +148,7 @@ Valentin
     (function() {
       var vCard = document.querySelector('#vcard');
       vCard.addEventListener('click', function() {
-        vCard.parentNode.removeChild(vCard);
+        vCard.classList.remove('visible');
       }, false);
     }())
   </script>

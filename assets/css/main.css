@@ -21,13 +21,13 @@ a:hover {
   text-decoration: underline;
 }
 
-
+/* 
 .ui {
   transition: transform .05s;
 }
 .ui:active {
   transform: scale(0.95);
-}
+} */
 
 .text-center {
   text-align: center;
@@ -92,6 +92,7 @@ small,
   border-radius: 3rem;
   padding: 0 1.5rem;
   box-shadow: rgba(0,0,0,.2) 0 .5rem 1rem;
+  z-index: 1000;
 }
 
 .vcard-popup a,
