@@ -78,7 +78,7 @@ function initialize() {
 
   // create atToolkitContext
   arToolkitContext = new THREEx.ArToolkitContext({
-    debug: true,
+    // debug: true,
     detectionMode: 'mono_and_matrix',
     matrixCodeType: '3x3',
     cameraParametersUrl: '/assets/data/camera_para.dat',
@@ -114,7 +114,7 @@ function initialize() {
   console.time('Loaded GLTF model');
   loader.load(
     // resource URL
-    '/assets/models/testMultipleAnimations/testMultipleAnimations.gltf',
+    '/assets/models/pixelHeart/pixelHeart.gltf',
 
     // called when the resource is loaded
     function ( gltf ) {
@@ -122,9 +122,9 @@ function initialize() {
       console.log(gltf);
 
       // material
-      gltf.scene.children.forEach(child => {
-        if (child.isMesh) child.material = defaultMaterial;
-      });
+      // gltf.scene.children.forEach(child => {
+      //   if (child.isMesh) child.material = defaultMaterial;
+      // });
 
       // animation
       var mixer = new THREE.AnimationMixer(gltf.scene);
