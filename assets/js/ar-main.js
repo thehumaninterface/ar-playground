@@ -36,6 +36,7 @@ function onResize() {
   // if ( arToolkitContext.arController !== null ) {
     arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
     arToolkitSource.copyElementSizeTo(arToolkitSkepticContext.arController.canvas);	
+    arToolkitSource.copyElementSizeTo(arToolkitStudioContext.arController.canvas);	
   // }	
 }
 
@@ -147,7 +148,7 @@ function loadSkepticScene() {
   arToolkitSkepticContext = new THREEx.ArToolkitContext({
     // debug: true,
     // detectionMode: 'mono_and_matrix',
-    detectionMode: 'mono',
+    // detectionMode: 'mono',
     cameraParametersUrl: '/assets/data/camera_para.dat',
   });
 
@@ -155,11 +156,6 @@ function loadSkepticScene() {
   arToolkitSkepticContext.init( function onCompleted(){
     arToolkitSkepticController = arToolkitSkepticContext.arController;
     camera.projectionMatrix.copy( arToolkitSkepticContext.getProjectionMatrix() );
-
-    // add listener
-    arToolkitSkepticController.addEventListener('getMarker', function (e) {
-      console.log(arToolkitSkepticController.patternMarkers);
-    });
   });
 
   // setup markerRoots
@@ -197,6 +193,86 @@ loadSkepticScene();
 
 
 
+
+
+function loadStudioScene(url, options, callback) {
+  // setup arToolkitContext
+  // create atToolkitContext
+  arToolkitStudioContext = new THREEx.ArToolkitContext({
+    // debug: true,
+    detectionMode: 'mono_and_matrix',
+    matrixCodeType: '3x3',
+    cameraParametersUrl: '/assets/data/camera_para.dat',
+  });
+
+  // copy projection matrix to camera when initialization complete
+  arToolkitStudioContext.init( function onCompleted(){
+    camera.projectionMatrix.copy( arToolkitStudioContext.getProjectionMatrix() );
+  });
+
+  // setup markerRoots
+  // build markerControls
+  markerStudioRoot = new THREE.Group();
+  scene.add(markerStudioRoot);
+
+  let markerControls1 = new THREEx.ArMarkerControls(arToolkitStudioContext, markerStudioRoot, {
+    type: 'barcode', 
+    barcodeValue: 40
+  })
+
+  // Load a glTF resource
+  console.time('Loaded GLTF model');
+  loader.load(
+    // resource URL
+    '/assets/models/iuStudio/iuStudio.gltf',
+
+    // called when the resource is loaded
+    function ( gltf ) {
+      console.timeEnd('Loaded GLTF model');
+      console.log(gltf);
+
+      // material
+      // gltf.scene.children.forEach(child => {
+      //   if (child.isMesh) child.material = defaultMaterial;
+      // });
+
+      // animation
+      var mixer = new THREE.AnimationMixer(gltf.scene);
+
+      var walls = gltf.scene.getObjectByName("Walls");
+      console.log(walls);
+      gltf.scene.getObjectByName("Walls").children.forEach(child => child.material = new THREE.MeshNormalMaterial({
+        transparent: true,
+        opacity: 0.5,
+        // side: THREE.DoubleSide
+      }));
+      gltf.scene.position.set(0.9,0,-5.4);
+      gltf.animations.forEach(function(animation) {
+        actions.push (
+          mixer.clipAction(animation).play()
+        );
+      });
+      
+      markerStudioRoot.add(gltf.scene);
+    },
+
+    // called while loading is progressing
+    function ( xhr ) {
+      console.log( ( xhr.loaded / xhr.total * 100 ) + '% loaded' );
+    },
+
+    // called when loading has errors
+    function ( error ) {
+      console.log( 'An error happened while loading model', error );
+    }
+  );
+}
+loadStudioScene();
+
+
+
+
+
 // Render magic
 function update() {
   if (actions.length) {
@@ -205,6 +281,7 @@ function update() {
   if ( arToolkitSource.ready !== false )
   arToolkitContext.update( arToolkitSource.domElement );
   arToolkitSkepticContext.update( arToolkitSource.domElement );
+  arToolkitStudioContext.update( arToolkitSource.domElement );
 
 }
 
@@ -249,12 +326,6 @@ animate();
 function ScreenCapture() {
   var sourceCanvas = arToolkitContext.arController.ctx.canvas;
   var drawingCanvas = renderer.domElement;
-  
-  console.log(drawingCanvas);
-  console.log(arToolkitSource);
-  console.log(arToolkitContext);
-  console.log(renderer);
-  
   
   mergeImages([sourceCanvas.toDataURL("image/png"), drawingCanvas.toDataURL("image/png")])
     .then(b64 => document.getElementById('screencapturepreview').src = b64);
