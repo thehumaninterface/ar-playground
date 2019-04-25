@@ -1,9 +1,4 @@
-// Actual code
-
 var actions = [];
-
-
-
 
 
 // Create renderer
@@ -30,52 +25,50 @@ defaultMaterial = new THREE.MeshNormalMaterial({
   side: THREE.DoubleSide
 });
 
+// setup arToolkitSource
+arToolkitSource = new THREEx.ArToolkitSource({
+  sourceType : 'webcam',
+});
+
+function onResize() {
+  arToolkitSource.onResizeElement()	
+  arToolkitSource.copyElementSizeTo(renderer.domElement)	
+  if ( arToolkitContext.arController !== null ) {
+    arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)	
+  }	
+}
+
+arToolkitSource.init(function onReady(){
+  onResize()
+});
+
+// Loader
+loader = new THREE.GLTFLoader();
 
 
-initialize();
-animate();
 
-function initialize() {
+
+
+
+
+function loadScene(url, options, callback) {
+  // Scene
   scene = new THREE.Scene();
-
-  let ambientLight = new THREE.AmbientLight( 0xffffff, 0.5 );
+  
+  let ambientLight = new THREE.AmbientLight( 0xffffff, 1);
   scene.add( ambientLight );
-
+  
   camera = new THREE.Camera();
   scene.add(camera);
   
-
   clock = new THREE.Clock();
-  
-  ////////////////////////////////////////////////////////////
-  // setup arToolkitSource
-  ////////////////////////////////////////////////////////////
-
-  arToolkitSource = new THREEx.ArToolkitSource({
-    sourceType : 'webcam',
-  });
-
-  function onResize() {
-    arToolkitSource.onResizeElement()	
-    arToolkitSource.copyElementSizeTo(renderer.domElement)	
-    if ( arToolkitContext.arController !== null ) {
-      arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)	
-    }	
-  }
-
-  arToolkitSource.init(function onReady(){
-    onResize()
-  });
   
   // handle resize event
   addEventListener('resize', function(){
     onResize()
   });
-  
-  ////////////////////////////////////////////////////////////
-  // setup arToolkitContext
-  ////////////////////////////////////////////////////////////	
 
+  // setup arToolkitContext
   // create atToolkitContext
   arToolkitContext = new THREEx.ArToolkitContext({
     // debug: true,
@@ -83,21 +76,22 @@ function initialize() {
     matrixCodeType: '3x3',
     cameraParametersUrl: '/assets/data/camera_para.dat',
   });
-  
+
   // copy projection matrix to camera when initialization complete
   arToolkitContext.init( function onCompleted(){
     camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
     arController = arToolkitContext.arController;
-
+  
     // add listener
-    // arController.addEventListener('getMarker', onMarkerFound);
+    arController.addEventListener('getMarker', function foundVCard(e) {
+      if (arController.barcodeMarkers[37].inCurrent) {
+        document.querySelector('#vcard').classList.add('visible');
+        arController.removeEventListener('getMarker', foundVCard);
+      }
+    });
   });
 
-
-  ////////////////////////////////////////////////////////////
   // setup markerRoots
-  ////////////////////////////////////////////////////////////
-
   // build markerControls
   markerRoot1 = new THREE.Group();
   scene.add(markerRoot1);
@@ -109,8 +103,6 @@ function initialize() {
   })
 
   // Load a glTF resource
-  var loader = new THREE.GLTFLoader();
-
   console.time('Loaded GLTF model');
   loader.load(
     // resource URL
@@ -147,31 +139,23 @@ function initialize() {
       console.log( 'An error happened while loading model', error );
     }
   );
+
 }
 
+loadScene();
 
+// Render magic
 function update() {
-  // console.log("markerRoot1", markerRoot1);
-  // console.log("mesh1", mesh1);
-  // debugger;
-  // if ( markerRoot1.visible )
-    // mesh1.rotation.y += 0.01;
-  // update artoolkit on every frame
-  // console.log(action);
-
   if (actions.length) {
     actions.forEach(action => action.getMixer().update(clock.getDelta()));
   }
-
   if ( arToolkitSource.ready !== false )
-    arToolkitContext.update( arToolkitSource.domElement );
+  arToolkitContext.update( arToolkitSource.domElement );
 }
-
 
 function render() {
   renderer.render( scene, camera );
 }
-
 
 function animate() {
   requestAnimationFrame(animate);
@@ -179,6 +163,7 @@ function animate() {
   render();
 }
 
+animate();
 
 
 

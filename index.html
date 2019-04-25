@@ -49,6 +49,10 @@
         </div>
       </header>
     </div>
+    <div id="vcard" class="vcard-popup">
+      <a href="/assets/data/valentin-popescu.vcf" target="_blank">Adaugă în contacte</a>
+      <button type="button" id="dismiss-vcard">&times</button>
+    </div>
   </div>
   
 
@@ -73,8 +77,11 @@ Valentin
   </script>
   <script src="/assets/js/script.min.js"></script>
   <script>
+
+
+
+    
     (function() {
-      
       var params = function() {
         if (!location.search) return {};
         
@@ -137,6 +144,13 @@ Valentin
 
     }())  
   </script>
-
+  <script>
+    (function() {
+      var vCard = document.querySelector('#vcard');
+      vCard.addEventListener('click', function() {
+        vCard.parentNode.removeChild(vCard);
+      }, false);
+    }())
+  </script>
 </body>
 </html>
