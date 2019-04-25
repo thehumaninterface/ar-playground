@@ -33,9 +33,10 @@ arToolkitSource = new THREEx.ArToolkitSource({
 function onResize() {
   arToolkitSource.onResizeElement()	
   arToolkitSource.copyElementSizeTo(renderer.domElement)	
-  if ( arToolkitContext.arController !== null ) {
-    arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas)	
-  }	
+  // if ( arToolkitContext.arController !== null ) {
+    arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
+    arToolkitSource.copyElementSizeTo(arToolkitSkepticContext.arController.canvas);	
+  // }	
 }
 
 arToolkitSource.init(function onReady(){
@@ -45,29 +46,24 @@ arToolkitSource.init(function onReady(){
 // Loader
 loader = new THREE.GLTFLoader();
 
+// Scene
+scene = new THREE.Scene();
 
+let ambientLight = new THREE.AmbientLight( 0xffffff, 1);
+scene.add( ambientLight );
 
+camera = new THREE.Camera();
+scene.add(camera);
 
+clock = new THREE.Clock();
 
+// handle resize event
+addEventListener('resize', function(){
+  onResize()
+});
 
 
 function loadScene(url, options, callback) {
-  // Scene
-  scene = new THREE.Scene();
-  
-  let ambientLight = new THREE.AmbientLight( 0xffffff, 1);
-  scene.add( ambientLight );
-  
-  camera = new THREE.Camera();
-  scene.add(camera);
-  
-  clock = new THREE.Clock();
-  
-  // handle resize event
-  addEventListener('resize', function(){
-    onResize()
-  });
-
   // setup arToolkitContext
   // create atToolkitContext
   arToolkitContext = new THREEx.ArToolkitContext({
@@ -93,10 +89,10 @@ function loadScene(url, options, callback) {
 
   // setup markerRoots
   // build markerControls
-  markerRoot1 = new THREE.Group();
-  scene.add(markerRoot1);
+  markerRoot = new THREE.Group();
+  scene.add(markerRoot);
 
-  let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot1, {
+  let markerControls1 = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
     type: 'barcode', 
     barcodeValue: 37
     // patternUrl: "/assets/markers/hiro.patt",
@@ -126,7 +122,7 @@ function loadScene(url, options, callback) {
         );
       });
       
-      markerRoot1.add(gltf.scene);
+      markerRoot.add(gltf.scene);
     },
 
     // called while loading is progressing
@@ -139,10 +135,67 @@ function loadScene(url, options, callback) {
       console.log( 'An error happened while loading model', error );
     }
   );
-
 }
-
 loadScene();
+
+
+
+function loadSkepticScene() {
+
+  // setup arToolkitContext
+  // create atToolkitContext
+  arToolkitSkepticContext = new THREEx.ArToolkitContext({
+    // debug: true,
+    // detectionMode: 'mono_and_matrix',
+    detectionMode: 'mono',
+    cameraParametersUrl: '/assets/data/camera_para.dat',
+  });
+
+  // copy projection matrix to camera when initialization complete
+  arToolkitSkepticContext.init( function onCompleted(){
+    arToolkitSkepticController = arToolkitSkepticContext.arController;
+    camera.projectionMatrix.copy( arToolkitSkepticContext.getProjectionMatrix() );
+
+    // add listener
+    arToolkitSkepticController.addEventListener('getMarker', function (e) {
+      console.log(arToolkitSkepticController.patternMarkers);
+    });
+  });
+
+  // setup markerRoots
+  // build markerControls
+  skepticMarkerRoot = new THREE.Group();
+  scene.add(skepticMarkerRoot);
+
+  let markerControls1 = new THREEx.ArMarkerControls(arToolkitSkepticContext, skepticMarkerRoot, {
+    // type: 'barcode', 
+    // barcodeValue: 39,
+    type: 'pattern',
+    patternUrl: '/assets/markers/hiro.patt', 
+  });
+
+  let geometry1 = new THREE.PlaneBufferGeometry(0,0, 1,1);
+  let video = document.createElement( 'video' );
+  video.innerHTML = '<source src="/assets/textures/skepticDrool/skepticDrool.mp4" type="video/mp4">';
+  video.setAttribute('autoplay', true);
+  video.setAttribute('loop', true);
+  video.setAttribute('crossorigin', 'anonymous');
+  
+  let texture = new THREE.VideoTexture( video );
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.format = THREE.RGBFormat;
+  let material1 = new THREE.MeshBasicMaterial( { map: texture } );
+  
+  var mesh1 = new THREE.Mesh( geometry1, material1 );
+  mesh1.rotation.x = -Math.PI/2;
+  
+  skepticMarkerRoot.add(mesh1);
+};
+
+loadSkepticScene();
+
+
 
 // Render magic
 function update() {
@@ -151,6 +204,8 @@ function update() {
   }
   if ( arToolkitSource.ready !== false )
   arToolkitContext.update( arToolkitSource.domElement );
+  arToolkitSkepticContext.update( arToolkitSource.domElement );
+
 }
 
 function render() {
