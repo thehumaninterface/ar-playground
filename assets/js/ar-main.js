@@ -1,23 +1,5 @@
 var actions = [];
 
-
-// Create renderer
-renderer = new THREE.WebGLRenderer({
-  antialias : true,
-  alpha: true,
-  
-  // In order to capture the image being drawn on the canvas
-  // https://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
-  preserveDrawingBuffer: true
-});
-renderer.setClearColor(new THREE.Color('lightgrey'), 0);
-renderer.setSize( 480, 480 );
-renderer.domElement.style.position = 'absolute'
-renderer.domElement.style.top = '0px'
-renderer.domElement.style.left = '0px'
-document.body.appendChild( renderer.domElement );
-
-
 // Material
 defaultMaterial = new THREE.MeshNormalMaterial({
   transparent: true,
@@ -30,6 +12,22 @@ arToolkitSource = new THREEx.ArToolkitSource({
   sourceType : 'webcam',
 });
 
+// Create renderer
+renderer = new THREE.WebGLRenderer({
+  antialias : true,
+  alpha: true,
+  
+  // In order to capture the image being drawn on the canvas
+  // https://stackoverflow.com/questions/15558418/how-do-you-save-an-image-from-a-three-js-canvas
+  preserveDrawingBuffer: true
+});
+renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setClearColor(new THREE.Color('lightgrey'), 0);
+renderer.domElement.style.position = 'absolute'
+renderer.domElement.style.top = '0px'
+renderer.domElement.style.left = '0px'
+document.body.appendChild( renderer.domElement );
+
 function onResize() {
   arToolkitSource.onResizeElement()	
   arToolkitSource.copyElementSizeTo(renderer.domElement)	
@@ -40,9 +38,12 @@ function onResize() {
   // }	
 }
 
+
 arToolkitSource.init(function onReady(){
   onResize()
 });
+
+
 
 // Loader
 loader = new THREE.GLTFLoader();
@@ -124,6 +125,12 @@ function loadScene(url, options, callback) {
       });
       
       markerRoot.add(gltf.scene);
+
+
+
+
+      // Some Debug
+      writeDebug(arToolkitSource.parameters.sourceWidth,arToolkitSource.parameters.sourceHeight);
     },
 
     // called while loading is progressing

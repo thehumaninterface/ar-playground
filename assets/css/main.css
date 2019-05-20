@@ -139,5 +139,14 @@ small,
   transform: translateX(-50%) scale(1);
 }
 
+/* debug */
+#debug {
+  position: fixed;
+  top:0;
+  left:0;
+  color: #fff;
+  z-index: 20000;
+}
+
 /* fonts */
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,600&subset=latin-ext');

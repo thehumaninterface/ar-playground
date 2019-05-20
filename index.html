@@ -54,6 +54,7 @@
       <a href="/assets/data/valentin-popescu.vcf" target="_blank">Adaugă în contacte</a>
       <button type="button" id="dismiss-vcard">&times</button>
     </div>
+    <div id="debug" hidden></div>
   </div>
   
 
@@ -92,12 +93,20 @@ Valentin
         return params;
       }();
       
+      var debugContainer = document.querySelector('#debug');
+
       if (params.debug) {
         console.time('Loaded AR scripts');
         loadAR();
+        debugContainer.removeAttribute('hidden');
       }
       
-
+      window.writeDebug = function() {
+        if (params.debug) {
+          console.log('debug');
+          debugContainer.innerHTML += '<p>' + Array.from(arguments).join(', ') + '</p>';
+        }
+      }
 
       var startBtn = document.querySelector('#start');
       
