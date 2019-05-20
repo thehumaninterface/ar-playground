@@ -11,8 +11,7 @@ renderer = new THREE.WebGLRenderer({
   preserveDrawingBuffer: true
 });
 renderer.setClearColor(new THREE.Color('lightgrey'), 0);
-// renderer.setSize( window.innerWidth, window.innerHeight, true);
-console.log(window.innerWidth);
+renderer.setSize( 480, 480 );
 renderer.domElement.style.position = 'absolute'
 renderer.domElement.style.top = '0px'
 renderer.domElement.style.left = '0px'
@@ -32,15 +31,13 @@ arToolkitSource = new THREEx.ArToolkitSource({
 });
 
 function onResize() {
-  arToolkitSource.onResizeElement();
-  console.log(renderer.domElement)
-  arToolkitSource.copyElementSizeTo(renderer.domElement)	;
-
-  if ( arToolkitContext.arController !== null ) {
+  arToolkitSource.onResizeElement()	
+  arToolkitSource.copyElementSizeTo(renderer.domElement)	
+  // if ( arToolkitContext.arController !== null ) {
     arToolkitSource.copyElementSizeTo(arToolkitContext.arController.canvas);
     arToolkitSource.copyElementSizeTo(arToolkitSkepticContext.arController.canvas);	
     arToolkitSource.copyElementSizeTo(arToolkitStudioContext.arController.canvas);	
-  }	
+  // }	
 }
 
 arToolkitSource.init(function onReady(){
@@ -247,7 +244,7 @@ function loadStudioScene(url, options, callback) {
       gltf.scene.getObjectByName("Walls").children.forEach(child => child.material = new THREE.MeshNormalMaterial({
         transparent: true,
         opacity: 0.5,
-        side: THREE.DoubleSide
+        // side: THREE.DoubleSide
       }));
       gltf.scene.position.set(0.9,0,-5.4);
       gltf.animations.forEach(function(animation) {

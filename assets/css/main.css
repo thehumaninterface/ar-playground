@@ -21,10 +21,13 @@ a:hover {
   text-decoration: underline;
 }
 
-
+/* 
 .ui {
-  overflow: hidden;
+  transition: transform .05s;
 }
+.ui:active {
+  transform: scale(0.95);
+} */
 
 .text-center {
   text-align: center;
@@ -138,16 +141,3 @@ small,
 
 /* fonts */
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,600&subset=latin-ext');
-
-
-
-/* fix overflowing canvas (created by THREEJS at a certain size) */
-html,
-body,
-.ui,
-video,
-canvas {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
